@@ -1,0 +1,180 @@
+<div ng-controller="transportationController">
+    <h4>Список маршрутов</h4>
+    <button type="button" class="btn btn-primary" ng-click="onCreate($event)">
+        <i class="fa fa-plus"></i> Добавить
+    </button>
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="form" ng-submit="submitData()">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" ng-if="!data.id">Добавление нового маршрута</h4>
+                        <h4 class="modal-title" ng-if="data.id">Редактирование маршрута</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" ng-model="data.id">
+                        <tabset>
+                            <tab>
+                                <tab-heading>
+                                    <i class="fa fa-inbox"></i> Заказ
+                                </tab-heading>
+                                <div class="form-group">
+                                    <label for="order">Заказ</label><br>
+                                    <select ng-options="item.id as item.name for (key, item) in order"
+                                            ng-model="data.order" ng-readonly="data.id"
+                                            id="order" required="required" class="form-control"></select>
+                                </div>
+                                <!--<div class="form-group">-->
+                                    <!--<label for="number">Номер</label>-->
+                                    <!--<input type="text" class="form-control" id="number" placeholder="Номер"-->
+                                            <!--ng-readonly="data.id"-->
+                                           <!--ng-model="data.number" required="required">-->
+                                <!--</div>-->
+                                <div class="form-group">
+                                    <label for="value">Количество</label>
+                                    <input type="text" class="form-control" id="value" placeholder="Количество"
+                                            ng-readonly="data.id"
+                                           ng-model="data.value" required="required">
+                                </div>
+                                <div class="form-group">
+                                    <label for="status">Статус</label>
+                                    <select ng-options="item.id as item.name for (key, item) in status"
+                                            ng-model="data.status"
+                                            id="status" required="required" class="form-control"></select>
+                                </div>
+                            </tab>
+                            <tab>
+                                <tab-heading>
+                                    <i class="fa fa-bolt"></i> Исполнение
+                                </tab-heading>
+                                <div class="form-group">
+                                    <label for="driver">Водитель</label><br>
+                                    <select ng-options="item.id as item.full_name for (key, item) in driver"
+                                            ng-model="data.driver" ng-readonly="data.id"
+                                            id="driver" required="required" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="truck">Машина</label><br>
+                                    <select ng-options="item.id as item.number for (key, item) in truck"
+                                            ng-model="data.truck" ng-readonly="data.id"
+                                            id="truck" required="required" class="form-control"></select>
+                                </div>
+                                <!--<div class="form-group">-->
+                                    <!--<label for="status">Дата начала</label>-->
+                                    <!--<span class="input-group">-->
+                                        <!--<input type="text" class="form-control" datepicker-popup="dd.MM.yyyy"-->
+                                               <!--ng-model="data.start_date" is-open="startOpened" min-date="minDate"-->
+                                               <!--ng-disabled="data.id" ng-required="true"-->
+                                               <!--show-button-bar="false" show-weeks="false"/>-->
+                                        <!--<span class="input-group-btn">-->
+                                            <!--<button type="button" class="btn btn-default" ng-click="openStart($event)">-->
+                                                <!--<i class="glyphicon glyphicon-calendar"></i>-->
+                                            <!--</button>-->
+                                        <!--</span>-->
+                                    <!--</span>-->
+                                    <!--<timepicker ng-model="data.start_time" hour-step="hstep" minute-step="mstep"-->
+                                                        <!--show-meridian="ismeridian"></timepicker>-->
+                                <!--</div>-->
+                            </tab>
+                            <tab>
+                                <tab-heading>
+                                    <i class="fa fa-map-marker"></i> Адреса
+                                </tab-heading>
+
+                                <div class="form-group">
+                                    <label for="departure">Адрес отправления</label><br>
+                                    <select ng-options="item.id as item.name for (key, item) in address"
+                                            ng-model="data.departure"  ng-readonly="data.id"
+                                            id="departure" required="required" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="destination">Адрес доставки</label><br>
+                                    <select ng-options="item.id as item.name for (key, item) in address"
+                                            ng-model="data.destination"  ng-readonly="data.id"
+                                            id="destination" required="required" class="form-control"></select>
+                                </div>
+                            </tab>
+                            <tab>
+                                <tab-heading>
+                                    <i class="fa fa-server"></i> Расходы
+                                </tab-heading>
+                                <div class="form-group">
+                                    <label for="fuel">Топливо</label>
+                                    <input type="text" class="form-control" id="fuel" placeholder="Топливо"
+                                           ng-model="data.fuel" ng-required="data.status==3">
+                                </div>
+                                <div class="form-group">
+                                    <label for="mileage">Километраж</label>
+                                    <input type="text" class="form-control" id="mileage" placeholder="Километраж"
+                                           ng-model="data.mileage" ng-required="data.status==3">
+                                </div>
+                            </tab>
+                        </tabset>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success" ng-disabled="form.$invalid">
+                            Сохранить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>
+                #
+            </th>
+            <th>
+                Номер
+            </th>
+            <th>
+                Заказ
+            </th>
+            <th>
+                Водитель
+            </th>
+            <th>
+                Номер машины
+            </th>
+            <th>
+                Статус
+            </th>
+            <th>
+                Адрес отправления
+            </th>
+            <th>
+                Адрес доставки
+            </th>
+            <th>
+                Контроль
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in transportation">
+            <td>{{item.id}}</td>
+            <td>{{item.name}}</td>
+            <td>{{order[item.order].name}}</td>
+            <td>{{driver[item.driver].full_name}}</td>
+            <td>{{truck[item.truck].number}}</td>
+            <td>{{status[item.status].name}}</td>
+            <td>{{address[item.departure].name}}</td>
+            <td>{{address[item.destination].name}}</td>
+            <td>
+                <a href="/transportation/delete/{{item.id}}" ng-click="onDelete($event)"
+                   data-toggle="tooltip" title="Удаление">
+                    <i class="fa fa-trash-o"></i>
+                </a>
+                <a href="/transportation/edit/{{item.id}}" ng-click="onEdit($event)" data-target="{{item.id}}"
+                   data-toggle="tooltip" title="Редактирование">
+                    <i class="fa fa-pencil"></i>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

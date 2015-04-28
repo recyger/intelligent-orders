@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html ng-app="mainModule">
+<head lang="ru">
+    <link rel="shortcut icon" href="/content/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/content/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/content/css/bootstrap-theme.css">
+    <link rel="stylesheet" href="/content/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/content/css/select2.min.css">
+    <script src="/content/js/angular.min.js"></script>
+    <script src="/content/js/angular-cookies.min.js"></script>
+    <script src="/content/js/ui-bootstrap-custom-0.12.1.min.js"></script>
+    <script src="/content/js/ui-bootstrap-custom-tpls-0.12.1.min.js"></script>
+    <script src="/content/js/jquery-2.1.3.min.js"></script>
+    <script src="/content/js/select2.min.js"></script>
+    <script src="/content/js/password-generator.min.js"></script>
+    <script src="/content/js/bootstrap.min.js"></script>
+    <script src="/content/js/bootbox.min.js"></script>
+    <script src="/content/js/main.app.js"></script>
+    <script src="/content/js/menu.js"></script>
+    <script src="/content/js/driver_status.js"></script>
+    <script src="/content/js/truck_model.js"></script>
+    <script src="/content/js/truck_status.js"></script>
+    <script src="/content/js/order_status.js"></script>
+    <script src="/content/js/transportation_status.js"></script>
+    <script src="/content/js/address.js"></script>
+    <script src="/content/js/customer.js"></script>
+    <script src="/content/js/order.js"></script>
+    <script src="/content/js/truck.js"></script>
+    <script src="/content/js/driver.js"></script>
+    <script src="/content/js/transportation.js"></script>
+    <script src="http://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+    <meta charset="UTF-8">
+    <title>Система управления заказами</title>
+</head>
+<body ng-controller="menuController">
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li ng-repeat="menu in menus" ng-class="{dropdown: menu.items, active: menu.value == url}">
+                    <a href="{{ menu.value }}"
+                       ng-if="menu.value"
+                       ng-click="onMenuAction($event)"
+                       ng-bind-html="menu.name"></a>
+                    <a href="" ng-if="menu.items" ng-bind-html="menu.name" class="dropdown-toggle"
+                       data-toggle="dropdown" role="button" aria-expanded="false"></a>
+                    <ul ng-if="menu.items" class="dropdown-menu" role="menu">
+                        <li ng-repeat="item in menu.items" ng-class="{active: item.value == url}">
+                            <a href="{{ item.value }}" ng-click="onMenuAction($event)" ng-bind-html="item.name"></a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container" ng-include src="body">
+</div>
+</body>
+</html>

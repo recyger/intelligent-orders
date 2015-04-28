@@ -1,0 +1,64 @@
+<div ng-controller="orderStatusController">
+    <h4>Список статусов для заказов</h4>
+    <button type="button" class="btn btn-primary" ng-click="onCreate($event)">
+        <i class="fa fa-plus"></i> Добавить
+    </button>
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="form" ng-submit="submitData()">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" ng-if="!data.id">Добавление нового статуса</h4>
+                        <h4 class="modal-title" ng-if="data.id">Редактирование статуса</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" ng-model="data.id">
+                        <div class="form-group">
+                            <label for="name">Название</label>
+                            <input type="text" class="form-control" id="name" placeholder="Название"
+                                   ng-model="data.name" required="required">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success" ng-disabled="form.$invalid">
+                            Сохранить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>
+                #
+            </th>
+            <th>
+                Название
+            </th>
+            <th>
+                Контроль
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in status">
+            <td>{{item.id}}</td>
+            <td>{{item.name}}</td>
+            <td>
+                <a href="/order_status/delete/{{item.id}}" ng-click="onDelete($event)"
+                   data-toggle="tooltip" title="Удаление">
+                    <i class="fa fa-trash-o"></i>
+                </a>
+                <a href="/order_status/edit/{{item.id}}" ng-click="onEdit($event)" data-target="{{item.id}}"
+                   data-toggle="tooltip" title="Редактирование">
+                    <i class="fa fa-pencil"></i>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
