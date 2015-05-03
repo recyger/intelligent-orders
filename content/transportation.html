@@ -26,28 +26,46 @@
                                             ng-model="data.order" ng-readonly="data.id"
                                             id="order" required="required" class="form-control"></select>
                                 </div>
-                                <!--<div class="form-group">-->
-                                    <!--<label for="number">Номер</label>-->
-                                    <!--<input type="text" class="form-control" id="number" placeholder="Номер"-->
-                                            <!--ng-readonly="data.id"-->
-                                           <!--ng-model="data.number" required="required">-->
-                                <!--</div>-->
                                 <div class="form-group">
                                     <label for="value">Количество</label>
                                     <input type="text" class="form-control" id="value" placeholder="Количество"
-                                            ng-readonly="data.id"
+                                           ng-readonly="data.id"
                                            ng-model="data.value" required="required">
                                 </div>
                                 <div class="form-group">
-                                    <label for="status">Статус</label>
-                                    <select ng-options="item.id as item.name for (key, item) in status"
-                                            ng-model="data.status"
-                                            id="status" required="required" class="form-control"></select>
+                                    <label for="date">Дата</label>
+                                    <input type="date" class="form-control" id="date" placeholder="yyyy-MM-dd"
+                                           ng-model="data.date" required="required">
                                 </div>
+                                <div class="form-group">
+                                    <label for="mileage">Километраж</label>
+                                    <input type="text" class="form-control" id="mileage" placeholder="Километраж"
+                                           ng-model="data.mileage" ng-required="true">
+                                </div>
+                                <form name="tachometers">
+                                    <div class="form-inline">
+                                        <div class="form-group">
+                                            <label for="tachometer_start">С</label>
+                                            <input type="number" class="form-control" id="tachometer_start"
+                                                   placeholder="С" ng-pattern="/[\d\,]+/" required="required"
+                                                   ng-model="tachometer.start">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="tachometer_end">По</label>
+                                            <input type="number" class="form-control" id="tachometer_end"
+                                                   placeholder="По" ng-pattern="/[\d\,]+/" required="tachometers"
+                                                   ng-model="tachometer.end">
+                                        </div>
+                                        <button type="button" class="btn btn-default" ng-click="calc()"
+                                                ng-disabled="tachometers.$invalid">
+                                            <i class="fa fa-calculator"></i>
+                                        </button>
+                                    </div>
+                                </form>
                             </tab>
                             <tab>
                                 <tab-heading>
-                                    <i class="fa fa-bolt"></i> Исполнение
+                                    <i class="fa fa-bolt"></i> Исполнители
                                 </tab-heading>
                                 <div class="form-group">
                                     <label for="driver">Водитель</label><br>
@@ -61,54 +79,17 @@
                                             ng-model="data.truck" ng-readonly="data.id"
                                             id="truck" required="required" class="form-control"></select>
                                 </div>
-                                <!--<div class="form-group">-->
-                                    <!--<label for="status">Дата начала</label>-->
-                                    <!--<span class="input-group">-->
-                                        <!--<input type="text" class="form-control" datepicker-popup="dd.MM.yyyy"-->
-                                               <!--ng-model="data.start_date" is-open="startOpened" min-date="minDate"-->
-                                               <!--ng-disabled="data.id" ng-required="true"-->
-                                               <!--show-button-bar="false" show-weeks="false"/>-->
-                                        <!--<span class="input-group-btn">-->
-                                            <!--<button type="button" class="btn btn-default" ng-click="openStart($event)">-->
-                                                <!--<i class="glyphicon glyphicon-calendar"></i>-->
-                                            <!--</button>-->
-                                        <!--</span>-->
-                                    <!--</span>-->
-                                    <!--<timepicker ng-model="data.start_time" hour-step="hstep" minute-step="mstep"-->
-                                                        <!--show-meridian="ismeridian"></timepicker>-->
-                                <!--</div>-->
-                            </tab>
-                            <tab>
-                                <tab-heading>
-                                    <i class="fa fa-map-marker"></i> Адреса
-                                </tab-heading>
-
                                 <div class="form-group">
                                     <label for="departure">Адрес отправления</label><br>
                                     <select ng-options="item.id as item.name for (key, item) in address"
-                                            ng-model="data.departure"  ng-readonly="data.id"
+                                            ng-model="data.departure" ng-readonly="data.id"
                                             id="departure" required="required" class="form-control"></select>
                                 </div>
                                 <div class="form-group">
                                     <label for="destination">Адрес доставки</label><br>
                                     <select ng-options="item.id as item.name for (key, item) in address"
-                                            ng-model="data.destination"  ng-readonly="data.id"
+                                            ng-model="data.destination" ng-readonly="data.id"
                                             id="destination" required="required" class="form-control"></select>
-                                </div>
-                            </tab>
-                            <tab>
-                                <tab-heading>
-                                    <i class="fa fa-server"></i> Расходы
-                                </tab-heading>
-                                <div class="form-group">
-                                    <label for="fuel">Топливо</label>
-                                    <input type="text" class="form-control" id="fuel" placeholder="Топливо"
-                                           ng-model="data.fuel" ng-required="data.status==3">
-                                </div>
-                                <div class="form-group">
-                                    <label for="mileage">Километраж</label>
-                                    <input type="text" class="form-control" id="mileage" placeholder="Километраж"
-                                           ng-model="data.mileage" ng-required="data.status==3">
                                 </div>
                             </tab>
                         </tabset>
@@ -141,9 +122,6 @@
                 Номер машины
             </th>
             <th>
-                Статус
-            </th>
-            <th>
                 Адрес отправления
             </th>
             <th>
@@ -161,7 +139,6 @@
             <td>{{order[item.order].name}}</td>
             <td>{{driver[item.driver].full_name}}</td>
             <td>{{truck[item.truck].number}}</td>
-            <td>{{status[item.status].name}}</td>
             <td>{{address[item.departure].name}}</td>
             <td>{{address[item.destination].name}}</td>
             <td>

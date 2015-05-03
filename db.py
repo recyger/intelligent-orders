@@ -20,6 +20,7 @@ class Driver(db.Entity):
     surname = Required(str, 128)
     status = Required("Driver_Status")
     transportations = Set("Transportation")
+    refills = Set("Refills")
 
 
 class Driver_Status(db.Entity):
@@ -35,11 +36,13 @@ class Truck(db.Entity):
     registration = Required(datetime, default=datetime.now())
     status = Required("Truck_Status")
     transportations = Set("Transportation")
+    refills = Set("Refills")
 
 
 class Truck_Model(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str)
+    expense = Optional(str, default=' ')
     trucks = Set(Truck)
 
 
@@ -63,11 +66,11 @@ class Order(db.Entity):
     address = Required("Address")
     status = Required("Order_Status")
     transportations = Set("Transportation")
+    cost = Required(str)
 
 
 class Address(db.Entity):
     id = PrimaryKey(int, auto=True)
-    coordinates = Required(str, default=' ')
     name = Required(str)
     os = Set(Order)
     departures = Set("Transportation", reverse="departure")
@@ -87,18 +90,18 @@ class Transportation(db.Entity):
     order = Required(Order)
     driver = Required(Driver)
     truck = Required(Truck)
-    status = Required("Transportation_Status")
-    start = Required(datetime, default=datetime.now())
-    end = Optional(datetime)
+    data = Required(datetime, default=datetime.now())
     value = Required(str)
-    fuel = Optional(str)
     mileage = Optional(str)
 
 
-class Transportation_Status(db.Entity):
+class Refills(db.Entity):
     id = PrimaryKey(int, auto=True)
-    name = Required(str)
-    transportations = Set(Transportation)
+    driver = Required(Driver)
+    truck = Required(Truck)
+    date = Required(datetime, default=datetime.now())
+    value = Required(str)
+    cost = Required(str)
 
 
 sql_debug(True)
@@ -113,24 +116,18 @@ def init():
         Driver_Status(name=u'Уволен')
 
     if count(r for r in Truck_Model) == 0:
-        Truck_Model(name=u'Урал')
-        Truck_Model(name=u'КАМАЗ')
+        Truck_Model(name=u'Ивеко')
+        Truck_Model(name=u'Скания')
 
     if count(r for r in Truck_Status) == 0:
-        Truck_Status(name=u'На месте')
+        Truck_Status(name=u'В простое')
         Truck_Status(name=u'На маршруте')
         Truck_Status(name=u'На ремонте')
         Truck_Status(name=u'Списан')
 
     if count(r for r in Order_Status) == 0:
-        Order_Status(name=u'В обработке')
         Order_Status(name=u'Выполняется')
         Order_Status(name=u'Завершен')
-
-    if count(r for r in Transportation_Status) == 0:
-        Transportation_Status(name=u'В обработке')
-        Transportation_Status(name=u'Выполняется')
-        Transportation_Status(name=u'Завершен')
 
 
 init()

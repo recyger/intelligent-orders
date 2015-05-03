@@ -24,11 +24,7 @@ def order_status_list():
 @app.post('/order_status/save')
 @db_session
 def order_status_save():
-    data = Tool.get_post('status')
-    _id = None
-    if 'id' in data.keys():
-        _id = int(data['id'])
-        del data['id']
+    _id, data = Tool.get_post('status')
     if _id is not None:
         user = Order_Status[_id]
         user.set(**data)
@@ -47,12 +43,18 @@ def order_status_delete(user_id):
     abort(400, 'Не найден пользователь')
 
 @app.post('/order/list')
+@app.post('/order/list/:status')
 @db_session
-def order_list():
+def order_list(status=None):
     result = {
         'data': {},
     }
-    for item in select(i for i in Order):
+    if status:
+        items = select(i for i in Order if i.status == status)
+    else:
+        items = select(i for i in Order)
+
+    for item in items:
         result['data'][item.id] = item.to_dict()
         result['data'][item.id]['processed_value'] = 0
         for t in item.transportations:
@@ -62,15 +64,13 @@ def order_list():
 @app.post('/order/save')
 @db_session
 def order_save():
-    data = Tool.get_post('status')
-    _id = None
-    if 'id' in data.keys():
-        _id = int(data['id'])
-        del data['id']
+    _id, data = Tool.get_post('status')
     if _id is not None:
         user = Order[_id]
         user.set(**data)
     else:
+        if 'status' not in data.keys():
+            data['status'] = 1
         Order(**data)
 
 @app.post('/order/delete/:user_id')

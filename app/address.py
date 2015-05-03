@@ -24,11 +24,7 @@ def address_list():
 @app.post('/address/save')
 @db_session
 def address_save():
-    data = Tool.get_post('status')
-    _id = None
-    if 'id' in data.keys():
-        _id = int(data['id'])
-        del data['id']
+    _id, data = Tool.get_post('status')
     if _id is not None:
         user = Address[_id]
         user.set(**data)

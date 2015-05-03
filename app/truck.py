@@ -24,11 +24,7 @@ def truck_model_list():
 @app.post('/truck_model/save')
 @db_session
 def truck_model_save():
-    data = Tool.get_post('status')
-    _id = None
-    if 'id' in data.keys():
-        _id = int(data['id'])
-        del data['id']
+    _id, data = Tool.get_post('status')
     if _id is not None:
         user = Truck_Model[_id]
         user.set(**data)
@@ -59,11 +55,7 @@ def truck_status_list():
 @app.post('/truck_status/save')
 @db_session
 def truck_status_save():
-    data = Tool.get_post('status')
-    _id = None
-    if 'id' in data.keys():
-        _id = int(data['id'])
-        del data['id']
+    _id, data = Tool.get_post('status')
     if _id is not None:
         user = Truck_Status[_id]
         user.set(**data)
@@ -82,23 +74,24 @@ def truck_status_delete(user_id):
     abort(400, 'Не найден пользователь')
 
 @app.post('/truck/list')
+@app.post('/truck/list/:status')
 @db_session
-def truck_list():
+def truck_list(status=None):
     result = {
         'data': {},
     }
-    for item in select(i for i in Truck):
+    if status:
+        items = select(i for i in Truck if i.status == status)
+    else:
+        items = select(i for i in Truck)
+    for item in items:
         result['data'][item.id] = item.to_dict(only=['id', 'number', 'model', 'status'])
     return result
 
 @app.post('/truck/save')
 @db_session
 def truck_save():
-    data = Tool.get_post('status')
-    _id = None
-    if 'id' in data.keys():
-        _id = int(data['id'])
-        del data['id']
+    _id, data = Tool.get_post('status')
     if _id is not None:
         user = Truck[_id]
         user.set(**data)

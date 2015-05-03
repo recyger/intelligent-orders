@@ -24,11 +24,7 @@ def driver_status_list():
 @app.post('/driver_status/save')
 @db_session
 def driver_status_save():
-    data = Tool.get_post('status')
-    _id = None
-    if 'id' in data.keys():
-        _id = int(data['id'])
-        del data['id']
+    _id, data = Tool.get_post('status')
     if _id is not None:
         user = Driver_Status[_id]
         user.set(**data)
@@ -47,12 +43,17 @@ def driver_status_delete(user_id):
     abort(400, 'Не найден пользователь')
 
 @app.post('/driver/list')
+@app.post('/driver/list/:status')
 @db_session
-def driver_list():
+def driver_list(status=None):
     result = {
         'data': {},
     }
-    for item in select(i for i in Driver):
+    if status:
+        items = select(i for i in Driver if i.status == status)
+    else:
+        items = select(i for i in Driver)
+    for item in items:
         result['data'][item.id] = item.to_dict()
         result['data'][item.id]['full_name'] = item.name + ' ' + item.patronymic + ' ' + item.surname
     return result
@@ -60,11 +61,7 @@ def driver_list():
 @app.post('/driver/save')
 @db_session
 def driver_save():
-    data = Tool.get_post('status')
-    _id = None
-    if 'id' in data.keys():
-        _id = int(data['id'])
-        del data['id']
+    _id, data = Tool.get_post('status')
     if _id is not None:
         user = Driver[_id]
         user.set(**data)

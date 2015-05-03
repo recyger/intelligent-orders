@@ -17,19 +17,7 @@ var users = app.controller("addressController", ['$scope', '$http',
                         $scope.status = data['data'];
                         $('[data-toggle="tooltip"]').tooltip();
                     });
-            },
-            map = new ymaps.Map("map", {
-                center: [48.483333, 135.066667],
-                zoom: 7
-            }),
-            placemark;
-        map.events.add('click', function (e) {
-            console.log(e.get('coords'));
-        });
-        map.geoObjects.events.add(['add', 'set'], function(event){
-            console.log(this);
-            console.log(event.get('child'));
-        }, map.geoObjects);
+            };
         $scope.data = {};
         $scope.status = [];
         $scope.onCreate = function (event) {

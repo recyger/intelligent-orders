@@ -1,7 +1,7 @@
 /**
  * Created by Vladislav on 05.04.2015.
  */
-var users = app.controller("transportationController", ['$scope', '$http',
+var users = app.controller("refillsController", ['$scope', '$http',
     function ($scope, $http) {
         var modal = $('#modal'),
             _set = function (data) {
@@ -16,30 +16,40 @@ var users = app.controller("transportationController", ['$scope', '$http',
                 //});
             },
             _get = function () {
-                $scope.get_address(1);
-                $scope.get_driver(1);
-                $scope.get_order(1);
-                $scope.get_truck(1);
-                $http.post('/transportation/list')
+                $http.post('/driver/list')
                     .success(function (data) {
-                        $scope.transportation = data['data'];
+                        $scope.driver = data['data'];
+                    });
+                $http.post('/truck/list')
+                    .success(function (data) {
+                        $scope.truck = data['data'];
+                    });
+                $http.post('/refills/list')
+                    .success(function (data) {
+                        $scope.refills = data['data'];
                         $('[data-toggle="tooltip"]').tooltip();
                     });
             };
-
         $scope.data = {};
-        $scope.transportation = [];
-        $scope.tachometer = {};
+        $scope.driver = [];
+        $scope.truck = [];
+        $scope.refills = [];
+        $scope.opened = false;
 
-        $scope.calc = function ($event) {
-            if ($event) {
-                $event.preventDefault();
-                $event.stopPropagation();
-            }
-            if ($scope.tachometer.end && $scope.tachometer.start) {
-                $('#mileage').val(parseFloat($scope.tachometer.end) - parseFloat($scope.tachometer.start));
-            }
+        $scope.open = function ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+
+            $scope.opened = true;
         };
+
+        $scope.dateOptions = {
+            'formatYear': 'yy',
+            'startingDay': 1,
+            'show-button-bar': false,
+            'current-text': 'Сегодня'
+        };
+
         $scope.onCreate = function (event) {
             event.preventDefault();
             _set();
@@ -47,7 +57,7 @@ var users = app.controller("transportationController", ['$scope', '$http',
         };
         $scope.onEdit = function (event) {
             event.preventDefault();
-            _set($scope.transportation[event.currentTarget.attributes['data-target'].value]);
+            _set($scope.refills[event.currentTarget.attributes['data-target'].value]);
             modal.modal('show');
         };
         $scope.submitData = function () {

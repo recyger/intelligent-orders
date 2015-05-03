@@ -50,7 +50,15 @@ class Tool(object):
         if data is None:
             data = request.json
         if name in data.keys():
-            return data[name]
+            _id = None
+            if 'id' in data[name].keys():
+                try:
+                    _id = int(data[name]['id'])
+                except:
+                    pass
+                finally:
+                    del data[name]['id']
+            return (_id, data[name])
         return None
 
 @app.error(400)

@@ -39,6 +39,10 @@ def menu():
                 'name': '<i class="fa fa-user-secret"></i> Заказчики',
             },
             {
+                'value': 'refills',
+                'name': '<i class="fa fa-tint"></i> Заправки',
+            },
+            {
                 'name': '<i class="fa fa-list-ul"></i> Типы и Статусы <span class="caret"></span>',
                 'items': [
                     {
@@ -56,10 +60,6 @@ def menu():
                     {
                         'value': 'order_status',
                         'name': '<i class="fa fa-table"></i> Статусы заказов'
-                    },
-                    {
-                        'value': 'transportation_status',
-                        'name': '<i class="fa fa-road"></i> Статусы маршрутов'
                     }
                 ]
             }

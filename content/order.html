@@ -26,14 +26,14 @@
                                    ng-model="data.value" required="required">
                         </div>
                         <div class="form-group">
+                            <label for="cost">Стоймость кубометра</label>
+                            <input type="text" class="form-control" id="cost" placeholder="Стоймость кубометра"
+                                   ng-model="data.cost" required="required">
+                        </div>
+                        <div class="form-group">
                             <label for="customer">Заказчик</label>
                             <select ng-options="item.id as item.name for (key, item) in customer" ng-model="data.customer"
                                     id="customer" required="required" class="form-control"></select>
-                        </div>
-                        <div class="form-group">
-                            <label for="status">Статус</label>
-                            <select ng-options="item.id as item.name for (key, item) in status" ng-model="data.status"
-                                    id="status" required="required" class="form-control"></select>
                         </div>
                         <div class="form-group">
                             <label for="address">Адрес</label><br>
@@ -71,6 +71,12 @@
             <th>
                 Количество
             </th>
+            <th>
+                Стоймость кубометра
+            </th>
+            <th>
+                Контроль
+            </th>
         </tr>
         </thead>
         <tbody>
@@ -81,6 +87,7 @@
             <td>{{customer[item.customer].name}}</td>
             <td>{{address[item.address].name}}</td>
             <td>{{item.value}}</td>
+            <td>{{item.cost}}</td>
             <td>
                 <a href="/order/delete/{{item.id}}" ng-click="onDelete($event)"
                    data-toggle="tooltip" title="Удаление">
